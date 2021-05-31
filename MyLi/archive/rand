@@ -1,0 +1,50 @@
+// <?php
+// $mysqli = new mysqli('localhost', 'root', '', 'myli') or die(mysqli_error($mysqli));
+// $query = "SELECT * FROM student";
+
+// $result = $mysqli->query($query);
+// 
+?>
+
+<?php
+while ($row = $result->fetch_assoc()) : ?>
+    <tr>
+        <td><?php echo $row['stdName']; ?></td>
+        <td><?php echo $row['stdMatricID']; ?></td>
+        <td><?php echo $row['stdEmail']; ?></td>
+        <td><?php echo $row['stdPhone']; ?></td>
+        <td><?php echo $row['stdProg']; ?></td>
+        <td>
+            <button class="btn btn-info"><i class="far fa-edit editBtn"></i> Edit</button>
+            <button class="btn btn-danger"><i class="far fa-trash-alt"></i> Delete</button>
+        </td>
+
+    </tr>
+<?php endwhile; ?>
+
+
+
+
+<?php
+            if ($query_run) {
+                foreach ($query_run as $row) {
+            ?>
+                    <tbody>
+                        <tr>
+                            <td><?php echo $row['stdName']; ?></td>
+                            <td><?php echo $row['stdMatricID']; ?></td>
+                            <td><?php echo $row['stdEmail']; ?></td>
+                            <td><?php echo $row['stdPhone']; ?></td>
+                            <td><?php echo $row['stdProg']; ?></td>
+                            <td>
+                                <button class="btn btn-info"><i class="far fa-edit editBtn"></i> Edit</button>
+                                <button class="btn btn-danger"><i class="far fa-trash-alt"></i> Delete</button>
+                            </td>
+                        </tr>
+                    </tbody> 
+            <?php
+                }
+            } else {
+                echo "<script type= 'text/javascript'>alert(1)</script>";
+            }
+            ?>
