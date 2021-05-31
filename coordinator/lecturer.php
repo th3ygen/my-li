@@ -10,16 +10,36 @@
 
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/css/bootstrap.min.css" rel="stylesheet" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" />
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.5.2/css/bootstrap.css">
+    <!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.5.2/css/bootstrap.css"> -->
     <link rel="stylesheet" href="https://cdn.datatables.net/1.10.24/css/dataTables.bootstrap4.min.css">
 
-    <title>Sandbox</title>
-    <link rel="stylesheet" href="./styles/sandbox.css">
+    <title>Coordinator | Lecturers</title>
+    <link rel="stylesheet" href="../styles/sandbox.css">
+
+    <style>
+        #updateStdList {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+            padding-left: 0;
+        }
+
+        #updateStdList>li {
+            display: flex;
+            justify-content: space-between;
+
+            transition: .3s all;
+        }
+
+        #updateStdList>li:hover {
+            background: white;
+        }
+    </style>
 </head>
 
 <body>
     <?php
-    include('./common/db.php');
+    include('../common/db.php');
 
     if (!isset($_SESSION['username'])) {
         if ($_SESSION['role'] != 'admin') {
@@ -28,13 +48,13 @@
         header('Location: http://' . $CONFIGS['HOSTNAME'] . $CONFIGS['ROOT_PATH'] . '/login.html');
     }
 
-    $query = 'SELECT * FROM student WHERE 1';
+    $query = 'SELECT * FROM staff WHERE 1';
 
-    $students = array();
+    $staffs = array();
     if ($res = $mysqli->query($query)) {
         if ($res->num_rows > 0) {
-            while ($student = $res->fetch_assoc()) {
-                array_push($students, $student);
+            while ($staff = $res->fetch_assoc()) {
+                array_push($staffs, $staff);
             }
         }
     }
@@ -96,49 +116,33 @@
     </div>
 
     <!-- UPDATE MODAL -->
-    <div class="modal fade" id="editModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+    <div class="modal fade" id="updateModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLongTitle">Edit Student</h5>
+                    <h5 class="modal-title" id="exampleModalLongTitle">Update Student-Lecturer</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
-                <form action="../MyLi/process.php" method="POST">
-                    <div class="modal-body">
+                <div class="modal-body">
+                    <input type="hidden" id="u_staffId" value="">
 
-                        <div class="form-group py-2">
-                            <label for="name">Name</label>
-                            <input type="text" name="stdName" class="form-control" id="stdName" placeholder="Enter Name">
-                        </div>
-                        <div class="form-group py-2">
-                            <label for="matric">Matric ID</label>
-                            <input type="text" name="stdMatricId" class="form-control" id="stdMatricId" placeholder="Enter Matric ID">
-                        </div>
-                        <div class="form-group py-2">
-                            <label for="exampleInputEmail1">Email Address</label>
-                            <input type="email" name="stdEmail" class="form-control" id="stdEmail" aria-describedby="emailHelp" placeholder="Enter Email">
-                        </div>
-                        <div class="form-group py-2">
-                            <label for="phone">Phone</label>
-                            <input type="tel" name="stdPhone" class="form-control" id="stdPhone" placeholder="012-3456789">
-                        </div>
-                        <div class="form-group py-2">
-                            <select name="stdProg" class="custom-select custom-select-lg mb-3" id=stdProg>
-                                <option selected>Program</option>
-                                <option value="BCS">BCS</option>
-                                <option value="BCG">BCG</option>
-                                <option value="BCN">BCN</option>
-                                <option value="DCS">DCS</option>
-                            </select>
-                        </div>
+                    <div class="form-group py-2">
+                        <label for="name">Name</label>
+                        <input type="text" name="supervisorName" class="form-control" id="u_staffName" placeholder="Enter Name">
                     </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel </button>
-                        <button type="submit" name="update" class="btn btn-primary">Update</button>
+                    <div class="form-group py-2">
+                        <label for="matric">Supervisee</label>
+                        <ol id="updateStdList" style="width: 100%; background: #e6e6e6; overflow-y: auto; max-height: 50vh;">
+
+                        </ol>
                     </div>
-                </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel </button>
+                    <button type="submit" id="updateSubmit" name="update" class="btn btn-primary">Update</button>
+                </div>
             </div>
         </div>
     </div>
@@ -153,7 +157,7 @@
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
-                <form action="../MyLi/process.php" method="POST">
+                <form action="./process.php" method="POST">
                     <div class="modal-body">
                         <h4>Are you sure want to delete this Student?</h4>
                         <input type="hidden" name="deleteMe" id="deleteMe">
@@ -175,7 +179,7 @@
                     <h5 class="modal-title" id="staticBackdropLabel">Edit Student</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
-                <form action="../MyLi/update.php" method="POST">
+                <form action="./update.php" method="POST">
                     <div class="modal-body">
 
                         <div class="form-group py-2">
@@ -252,13 +256,13 @@
 
             <ul class="list-unstyled components">
                 <li class="active">
-                    <a href="../MyLi/sandbox.php">
+                    <a href="./sandbox.php">
                         <i style="width: 30px" class="fab fa-accusoft"></i>
                         User List
                     </a>
                 </li>
                 <li>
-                    <a href="../MyLi/report.html">
+                    <a href="./report.html">
                         <i style="width: 30px" class="fas fa-chart-pie"></i>
                         Report
                     </a>
@@ -312,7 +316,7 @@
                         <div class="p-3 bg-white shadow-sm d-flex justify-content-around align-items-center rounded">
                             <div>
                                 <h3 class="fs-2">1337</h3>
-                                <p class="fs-5">Students</p>
+                                <p class="fs-5">BCS</p>
                             </div>
 
                             <div class="std-icon">
@@ -325,7 +329,7 @@
                         <div class="p-3 bg-white shadow-sm d-flex justify-content-around align-items-center rounded">
                             <div>
                                 <h3 class="fs-2">69</h3>
-                                <p class="fs-5">Supervisor</p>
+                                <p class="fs-5">BCN</p>
                             </div>
                             <div class="sv-icon">
                                 <i class="fas fa-user-tie"></i>
@@ -337,7 +341,7 @@
                         <div class="p-3 bg-white shadow-sm d-flex justify-content-around align-items-center rounded">
                             <div>
                                 <h3 class="fs-2">420</h3>
-                                <p class="fs-5">Coordinator</p>
+                                <p class="fs-5">BCG</p>
                             </div>
                             <div class="coor-icon">
                                 <i class="fas fa-chalkboard-teacher"></i>
@@ -349,7 +353,7 @@
                         <div class="p-3 bg-white shadow-sm d-flex justify-content-around align-items-center rounded">
                             <div>
                                 <h3 class="fs-2">1337</h3>
-                                <p class="fs-5">Faculty Supervisor</p>
+                                <p class="fs-5">DCS</p>
                             </div>
                             <div class="fac-icon">
                                 <i class="fas fa-user"></i>
@@ -361,24 +365,8 @@
                 <div class="row g-5 my-4">
                     <div class="col-sm-12">
                         <div class="card">
-                            <div class="card-header">
-                                <ul class="nav nav-tabs card-header-tabs">
-                                    <li class="nav-item">
-                                        <a class="nav-link active" href="#">Students</a>
-                                    </li>
-                                    <li class="nav-item">
-                                        <a class="nav-link" href="../MyLi/sandbox-sv.php">Supervisor</a>
-                                    </li>
-                                    <li class="nav-item">
-                                        <a class="nav-link" href="../MyLi/sandbox-coordinator.php">Coordinator</a>
-                                    </li>
-                                    <li class="nav-item">
-                                        <a class="nav-link" href="../MyLi/sandbox-facSv.php">Faculty Supervisor</a>
-                                    </li>
-                                </ul>
-                            </div>
                             <div class="card-body">
-                                <h5 class="card-title">Student List</h5>
+                                <h5 class="card-title">Student-Lecturer List</h5>
                                 <div class="col">
                                     <!-- ADD MODAL TRIGGER -->
                                     <div class="icons">
@@ -388,29 +376,37 @@
                                     <table id="testTable" class="table bg-white rounded shadow-sm table-hover">
                                         <thead>
                                             <tr>
-                                                <th scope="col">Name</th>
-                                                <th scope="col">Matric ID</th>
-                                                <th scope="col">Email</th>
-                                                <th scope="col">Phone</th>
-                                                <th scope="col">Programme</th>
-                                                <th scope="col">Actions</th>
+                                                <th scope="col" width="50px">No</th>
+                                                <th scope="col">Supervisor</th>
+                                                <th scope="col">Supervisee</th>
+                                                <th scope="col" width="250px">Action</th>
                                             </tr>
                                         </thead>
                                         <tbody>
                                             <?php
-                                            foreach ($students as $student) : ?>
+                                            $x = 0;
+                                            foreach ($staffs as $staff) {
+                                                $query = 'SELECT * FROM student WHERE supervisorId = ' . $staff['id'] . ' AND supervisorId >= 0';
+
+                                                $list = '<ol>';
+                                                if ($res = $mysqli->query($query)) {
+                                                    if ($res->num_rows > 0) {
+                                                        while ($student = $res->fetch_assoc()) {
+                                                            $list .= '<li>[' . $student['matricId'] . '] ' . $student['stdName'] . '</li>';
+                                                        }
+                                                    }
+                                                }
+                                            ?>
                                                 <tr>
-                                                    <td><?php echo $student['stdName']; ?></td>
-                                                    <td><?php echo $student['matricId']; ?></td>
-                                                    <td><?php echo $student['stdEmail']; ?></td>
-                                                    <td><?php echo $student['stdPhoneNum']; ?></td>
-                                                    <td><?php echo $student['stdProgram']; ?></td>
+                                                    <td><?php echo ++$x; ?></td>
+                                                    <td><?php echo $staff['name']; ?></td>
+                                                    <td><?php echo $list; ?></td>
                                                     <td>
-                                                        <button class="btn btn-info"><i class="far fa-edit editBtn"></i> Edit</button>
+                                                        <button class="btn btn-info editBtn" data-toggle="modal" data-target="#updateModal" data-id="<?php echo $staff['id']; ?>"><i class="far fa-edit"></i> Edit</button>
                                                         <button class="btn btn-danger"><i class="far fa-trash-alt deleteBtn"></i> Delete</button>
                                                     </td>
                                                 </tr>
-                                            <?php endforeach; ?>
+                                            <?php } ?>
                                         </tbody>
                                     </table>
                                 </div>
@@ -450,29 +446,10 @@
 
 
     <script>
-        $(document).ready(function() {
-            $('.editBtn').on('click', function() {
-                $('#editModal').modal('show');
+        function removeStd(e) {
+            $(e).parent().remove();
+        }
 
-                $tr = $(this).closest('tr');
-
-                let data = $tr.children('td').map(function() {
-                    return $(this).text();
-                }).get();
-
-                console.log(data);
-
-                $('#stdName').val(data[0]);
-                $('#stdMatricId').val(data[1]);
-                $('#stdEmail').val(data[2]);
-                $('#stdPhone').val(data[3]);
-                $('#stdProg').val(data[4]);
-
-            });
-        });
-    </script>
-
-    <script>
         $(document).ready(function() {
             $('#testTable').DataTable();
 
@@ -490,15 +467,58 @@
                 $('#deleteMe').val(data[1]);
 
             });
+
+            /* <div class="modal-body">
+                <input type="hidden" id="u_staffId" name="id" value="">
+                <input type="hidden" id="u_deletingIds" name="deletingIds" value="">
+                <div class="form-group py-2">
+                    <label for="name">Name</label>
+                    <input type="text" name="supervisorName" class="form-control" id="u_staffName" placeholder="Enter Name">
+                </div>
+                <div class="form-group py-2">
+                    <label for="matric">Supervisee</label>
+                    <ol id="updateStdList" style="width: 100%; background: #e6e6e6; overflow-y: auto; max-height: 50vh;">
+
+                    </ol>
+                </div>
+            </div> */
+            $('#updateSubmit').on('click', () => {
+                const id = $('#u_staffId').val();
+                const name = $('#u_staffName').val();
+
+                const ids = [];
+                $('#updateStdList').children().each((x, e) => {
+                    ids.push(`"${e.dataset.id}"`);
+                });
+
+                $.get(`http://localhost/sites/my-li/coordinator/updatelecturer.php?id=${id}&name=${name}&ids=${ids.join(',')}`, (data, status) => {
+                    window.location.reload();
+                });
+            });
+
+            $('.editBtn').on('click', function(e) {
+                $('#u_staffId').val(e.target.dataset.id);
+
+                $.get(`http://localhost/sites/my-li/coordinator/getstudents.php?id=${e.target.dataset.id}`, (data, status) => {
+                    let list = '';
+                    data.toString().split(',').forEach(i => {
+                        const val = i.split('|');
+                        list += `<li data-id="${val[0]}"><span>[${val[0]}] ${val[1]}</span><div class="btn btn-danger btn-remove-supervisee" onclick="removeStd(this)"><i class="far fa-trash-alt"></i></div></li>`
+                    });
+                    $('#updateStdList').html(list);
+                });
+            });
+
+
         });
     </script>
 
-    <script src="../MyLi/scripts/index.js"></script>
+    <!-- <script src="./scripts/index.js"></script> -->
 
-    <!-- <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/js/bootstrap.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/js/bootstrap.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js@3.2.1/dist/chart.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script> -->
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
 
 </body>
 

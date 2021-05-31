@@ -16,7 +16,7 @@ if (isset($_POST['add'])) {
     $stdPhone = $_POST['stdPhone'];
     $stdProg = $_POST['stdProg'];
 
-    $query = "INSERT INTO student (stdName, stdMatricId, stdEmail, stdPhone, stdProg) VALUES('$stdName', '$stdMatricId', '$stdEmail', '$stdPhone', '$stdProg')";
+    $query = "INSERT INTO student (stdName, matricId, stdEmail, stdPhone, stdProg) VALUES('$stdName', '$stdMatricId', '$stdEmail', '$stdPhone', '$stdProg')";
     // $query_run = mysqli_query($connection, $query);
 
     $mysqli->query($query) or die($mysqli->error);
@@ -31,7 +31,7 @@ if (isset($_POST['add'])) {
 if (isset($_POST['delete'])){
     $id = $_POST['deleteMe'];
 
-    $query = "DELETE FROM student WHERE stdMatricId = '$id'";
+    $query = "DELETE FROM student WHERE matricId = '$id'";
 
     $mysqli->query($query);
 
@@ -44,14 +44,14 @@ if (isset($_POST['delete'])){
 
 if (isset($_POST['update'])) {
 
-    $stdMatricId = $_POST['stdMatricId'];
+    $stdMatricId = $_POST['matricId'];
 
     $stdName = $_POST['stdName'];
     $stdEmail = $_POST['stdEmail'];
     $stdPhone = $_POST['stdPhone'];
     $stdProg = $_POST['stdProg'];
 
-    $query = "UPDATE student SET stdName = '$stdName', stdEmail = '$stdEmail', stdPhone = '$stdPhone', stdProg = '$stdProg' WHERE stdMatricId = '$stdMatricId'"; 
+    $query = "UPDATE student SET stdName = '$stdName', stdEmail = '$stdEmail', stdPhone = '$stdPhone', stdProg = '$stdProg' WHERE matricId = '$stdMatricId'"; 
 
     $mysqli->query($query) or die($mysqli->error);
 
