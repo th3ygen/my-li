@@ -7,7 +7,7 @@ session_start();
 //   {
 //   echo "Failed to connect to MySQL: " . mysqli_connect_error();
 //   }
-$mysqli = new mysqli('localhost', 'root', '', 'myli') or die(mysqli_error($mysqli));
+$mysqli = new mysqli('localhost', 'root', '', 'my-li') or die(mysqli_error($mysqli));
 
 if (isset($_POST['add'])) {
     $stdName = $_POST['stdName'];

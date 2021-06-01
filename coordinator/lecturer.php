@@ -34,6 +34,10 @@
         #updateStdList>li:hover {
             background: white;
         }
+
+        #updateStdList>li.no-hov:hover {
+            background: initial;
+        }
     </style>
 </head>
 
@@ -446,6 +450,62 @@
 
 
     <script>
+        async function addStdToList(svId) {
+            const selectStd = document.querySelector('#selectStd').value;
+
+            const res = await $.get(`http://localhost/sites/my-li/coordinator/assignStudent.php?id=${svId}&matricId=${selectStd}`);
+
+            if (res === '403') {
+                return alert('Exceed limit of 5 students');
+            }
+
+            return updateStdList(svId);
+        }
+
+        async function updateStdList(id) {
+            let list = '';
+
+            const data = await $.get(`http://localhost/sites/my-li/coordinator/getstudents.php?id=${id}`);
+
+            if (data !== '') {
+
+                data.toString().split(',').forEach(i => {
+                    const val = i.split('|');
+
+                    list += `<li data-id="${val[0]}"><span>[${val[0]}] ${val[1]}</span><div class="btn btn-danger btn-remove-supervisee" onclick="removeStd(this)"><i class="far fa-trash-alt"></i></div></li>`
+                });
+            } else {
+                list = 'No student';
+            }
+
+            list = await appendStudentDD(id, list);
+
+            $('#updateStdList').html(list);
+
+            return list;
+
+        }
+
+        async function appendStudentDD(id, list) {
+            let stds = '';
+
+            const data = await $.get('http://localhost/sites/my-li/coordinator/getAllStudents.php?filter=freeonly');
+
+            data.toString().split(',').forEach(i => {
+                const std = i.split('|');
+                stds += `<option value=${std[0]}>[${std[0]}] ${std[1]}</option>`;
+            });
+
+            list += `<li class="no-hov">
+            <select id="selectStd">
+                ${stds}
+            </select>
+            <input type="button" value="Assign student" onclick="addStdToList('${id}')"/>
+            </li>`;
+
+            return list;
+        }
+
         function removeStd(e) {
             $(e).parent().remove();
         }
@@ -461,8 +521,6 @@
                 let data = $tr.children('td').map(function() {
                     return $(this).text();
                 }).get();
-
-                console.log(data[1]);
 
                 $('#deleteMe').val(data[1]);
 
@@ -496,17 +554,17 @@
                 });
             });
 
-            $('.editBtn').on('click', function(e) {
-                $('#u_staffId').val(e.target.dataset.id);
 
-                $.get(`http://localhost/sites/my-li/coordinator/getstudents.php?id=${e.target.dataset.id}`, (data, status) => {
-                    let list = '';
-                    data.toString().split(',').forEach(i => {
-                        const val = i.split('|');
-                        list += `<li data-id="${val[0]}"><span>[${val[0]}] ${val[1]}</span><div class="btn btn-danger btn-remove-supervisee" onclick="removeStd(this)"><i class="far fa-trash-alt"></i></div></li>`
-                    });
-                    $('#updateStdList').html(list);
-                });
+            $('.editBtn').on('click', async e => {
+                const {
+                    id
+                } = e.target.dataset;
+
+                $('#u_staffId').val(id);
+
+                let list = await updateStdList(id);
+
+                $('#updateStdList').html(list);
             });
 
 

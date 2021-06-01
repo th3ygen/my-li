@@ -58,7 +58,7 @@
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
-                <form action="../MyLi/process.php" method="POST">
+                <form action="./process.php" method="POST">
                     <div class="modal-body">
                         <div class="form-group py-2">
                             <label for="name">Name</label>
@@ -105,7 +105,7 @@
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
-                <form action="../MyLi/process.php" method="POST">
+                <form action="./process.php" method="POST">
                     <div class="modal-body">
 
                         <div class="form-group py-2">
@@ -167,79 +167,6 @@
         </div>
     </div>
 
-    <!-- SANDBOX Modal -->
-    <div class="modal fade" id="sandboxModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="staticBackdropLabel">Edit Student</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <form action="../MyLi/update.php" method="POST">
-                    <div class="modal-body">
-
-                        <div class="form-group py-2">
-                            <label for="name">Name</label>
-                            <input type="text" name="stdName" class="form-control" id="stdName" placeholder="Enter Name">
-                        </div>
-                        <div class="form-group py-2">
-                            <label for="matric">Matric ID</label>
-                            <input type="text" name="stdMatricId" class="form-control" id="stdMatricId" placeholder="Enter Matric ID">
-                        </div>
-                        <div class="form-group py-2">
-                            <label for="exampleInputEmail1">Email Address</label>
-                            <input type="email" name="stdEmail" class="form-control" id="stdEmail" aria-describedby="emailHelp" placeholder="Enter Email">
-                        </div>
-                        <div class="form-group py-2">
-                            <label for="phone">Phone</label>
-                            <input type="tel" name="stdPhone" class="form-control" id="stdPhone" placeholder="012-3456789">
-                        </div>
-                        <div class="form-group py-2">
-                            <select name="stdProg" class="custom-select custom-select-lg mb-3" id=stdProg>
-                                <option selected>Program</option>
-                                <option value="BCS">BCS</option>
-                                <option value="BCG">BCG</option>
-                                <option value="BCN">BCN</option>
-                                <option value="DCS">DCS</option>
-                            </select>
-                        </div>
-                    </div>
-                    <!-- <div class="mb-3">
-                            <label for="stdName" class="form-label">Name</label>
-                            <input type="text" class="form-control" name="stdName" id="stdName" placeholder="Enter Name">
-                        </div>
-                        <div class="mb-3">
-                            <label for="stdMatricId" class="form-label">Matric ID</label>
-                            <input type="text" class="form-control" name="stdMatricId" id="stdMatricId" placeholder="Enter Matric ID">
-                        </div>
-                        <div class="mb-3">
-                            <label for="stdEmail" class="form-label">Email address</label>
-                            <input type="email" class="form-control" name="stdEmail" id="stdEmail" aria-describedby="emailHelp" placeholder="Enter Email">
-                        </div>
-                        <div class="mb-3">
-                            <label for="stdPhone" class="form-label">Phone</label>
-                            <input type="tel" class="form-control" name="stdPhone" id="stdPhone" placeholder="Enter Phone">
-                        </div>
-                        <div class="mb-3">
-                            <label for="stdProg" class="form-label">Programme</label>
-                            <select name="stdProg" class="form-select" aria-label="Default select example">
-                                <option selected>Programme</option>
-                                <option value="BCS">BCS</option>
-                                <option value="BCG">BCG</option>
-                                <option value="BCN">BCN</option>
-                                <option value="DCS">DCS</option>
-                            </select>
-                        </div> -->
-
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                        <button type="submit" class="btn btn-primary">Update</button>
-                    </div>
-                </form>
-            </div>
-        </div>
-    </div>
-
     <!-- ################################################################################################ -->
 
     <div class="container">
@@ -252,13 +179,13 @@
 
             <ul class="list-unstyled components">
                 <li class="active">
-                    <a href="../MyLi/sandbox.php">
+                    <a href="./sandbox.php">
                         <i style="width: 30px" class="fab fa-accusoft"></i>
                         User List
                     </a>
                 </li>
                 <li>
-                    <a href="../MyLi/report.html">
+                    <a href="./report.html">
                         <i style="width: 30px" class="fas fa-chart-pie"></i>
                         Report
                     </a>
